@@ -10,8 +10,14 @@
 <body>
   <div class="container">
     <h1>Työvuoro ICS Generaattori</h1>
+    <p class="subtitle">Luo kalenteritiedosto työvuoroistasi</p>
     <input type="file" id="pdfInput" accept=".pdf" onchange="updateButtonState()">
-    <button id="generateButton" onclick="generateICS()" disabled>Luo ICS</button>
+    <div class="button-group">
+      <button id="generateButton" onclick="generateICS()" disabled>Luo ICS</button>
+      <button id="googleButton" onclick="window.open('https://calendar.google.com/calendar/u/0/r/settings/export', '_blank')">
+        Lisää Google Kalenteriin
+      </button>
+    </div>
     <div id="status"></div>
   </div>
   <footer>2025 Marko.T©</footer>
