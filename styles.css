@@ -115,10 +115,8 @@
     min-height: 20px; /* Prevent layout shift */
   }
   
-  footer {
-    position: fixed;
-    bottom: 15px;
-    left: 15px;
+  .copyright {
+    margin-top: 20px;
     font-size: 12px;
     color: #7a7a99;
   }
