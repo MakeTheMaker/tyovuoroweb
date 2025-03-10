@@ -7,8 +7,8 @@
   
   body {
     font-family: 'Segoe UI', Arial, sans-serif;
-    background-color: #1e1e2f; /* Dark navy background */
-    color: #e0e0e0; /* Light text */
+    background-color: #1e1e2f;
+    color: #e0e0e0;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,18 +18,23 @@
   }
   
   .container {
-    background: #2d2d44; /* Darker card background */
+    background: #2d2d44;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     text-align: center;
-    max-width: 600px;
+    max-width: 800px;
     width: 100%;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, border 0.3s;
+  }
+  
+  .container.dragover {
+    border: 2px dashed #5a5aff;
+    transform: scale(1.02);
   }
   
   .container:hover {
-    transform: translateY(-5px); /* Subtle lift on hover */
+    transform: translateY(-5px);
   }
   
   h1 {
@@ -39,7 +44,7 @@
   }
   
   .subtitle {
-    color: #b0b0cc; /* Muted subtitle */
+    color: #b0b0cc;
     font-size: 16px;
     margin-bottom: 20px;
   }
@@ -70,6 +75,57 @@
     background: #5a5a99;
   }
   
+  .customization {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+  }
+  
+  .customization label {
+    color: #b0b0cc;
+    font-size: 14px;
+  }
+  
+  .customization select, .customization input[type="number"] {
+    background: #3b3b5b;
+    color: #e0e0e0;
+    border: 1px solid #4a4a77;
+    border-radius: 6px;
+    padding: 5px;
+  }
+  
+  #preview {
+    margin: 20px 0;
+  }
+  
+  #preview h2 {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #e0e0e0;
+  }
+  
+  th, td {
+    padding: 10px;
+    border: 1px solid #4a4a77;
+    text-align: left;
+  }
+  
+  th {
+    background: #3b3b5b;
+  }
+  
+  td {
+    background: #2d2d44;
+  }
+  
   .button-group {
     display: flex;
     flex-wrap: wrap;
@@ -79,7 +135,7 @@
   }
   
   button {
-    background-color: #5a5aff; /* Bright blue primary button */
+    background-color: #5a5aff;
     color: #ffffff;
     padding: 12px 24px;
     border: none;
@@ -101,18 +157,72 @@
   }
   
   #googleButton {
-    background-color: #ff5555; /* Red for Google button */
+    background-color: #ff5555;
   }
   
   #googleButton:hover:not(:disabled) {
     background-color: #ff3333;
   }
   
+  #shareButton {
+    background-color: #55ff55;
+  }
+  
+  #shareButton:hover:not(:disabled) {
+    background-color: #33dd33;
+  }
+  
+  #links {
+    margin-top: 15px;
+  }
+  
+  #links a {
+    color: #5a5aff;
+    text-decoration: none;
+    margin: 0 10px;
+  }
+  
+  #links a:hover {
+    text-decoration: underline;
+  }
+  
   #status {
     margin-top: 20px;
     font-size: 14px;
     color: #b0b0cc;
-    min-height: 20px; /* Prevent layout shift */
+    min-height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #b0b0cc;
+    border-top: 3px solid #5a5aff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  #status.success {
+    color: #55ff55;
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  #status.error {
+    color: #ff5555;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
   
   .copyright {
@@ -121,7 +231,10 @@
     color: #7a7a99;
   }
   
-  /* Responsive design */
+  .hidden {
+    display: none;
+  }
+  
   @media (max-width: 500px) {
     .container {
       padding: 20px;
@@ -138,5 +251,10 @@
     button {
       padding: 10px 20px;
       font-size: 14px;
+    }
+  
+    .customization {
+      flex-direction: column;
+      align-items: center;
     }
   }
