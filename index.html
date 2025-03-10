@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Työvuoro ICS Generaattori</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Työvuoro ICS Generaattori</h1>
+    <input type="file" id="pdfInput" accept=".pdf" onchange="updateButtonState()">
+    <button id="generateButton" onclick="generateICS()" disabled>Luo ICS</button>
+    <div id="status"></div>
+  </div>
+  <footer>2025 Marko.T©</footer>
+  <script src="script.js"></script>
+</body>
+</html>
