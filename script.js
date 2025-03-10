@@ -4,7 +4,7 @@ let icsBlob = null;
 function updateButtonState() {
   const generateButton = document.getElementById("generateButton");
   generateButton.disabled = !selectedFile;
-  generateButton.textContent = selectedFile ? "Luo ICS" : "Valitse tiedosto";
+  generateButton.textContent = selectedFile ? "Luo ICS" : "Luo ICS (valitse ensin)";
 }
 
 function handleFileSelect(event) {
@@ -142,7 +142,12 @@ async function generateICS() {
   const statusText = document.getElementById("statusText");
   const spinner = document.getElementById("spinner");
   const reminder = document.getElementById("reminder").value;
-  const duration = parseInt(document.getElementById("duration").value) * 60; // Convert hours to minutes
+
+  if (!selectedFile) {
+    statusText.textContent = "Valitse PDF-tiedosto ensin!";
+    status.classList.add("error");
+    return;
+  }
 
   status.classList.remove("success", "error");
   statusText.textContent = "Luodaan ICS-tiedostoa...";
@@ -187,12 +192,7 @@ async function generateICS() {
       desc = desc.replace(/\d{1,2}:\d{2}\s*(Viikkotunnit)?/gi, "").trim();
 
       if (timeRange) {
-        let [startTime, endTime] = timeRange.split("-").map(t => t.trim().replace(" ", ""));
-        if (!endTime && startTime) {
-          const startDate = new Date(`${date.slice(0,4)}-${date.slice(4,6)}-${date.slice(6,8)}T${startTime}:00`);
-          startDate.setMinutes(startDate.getMinutes() + duration);
-          endTime = `${String(startDate.getHours()).padStart(2, "0")}:${String(startDate.getMinutes()).padStart(2, "0")}`;
-        }
+        const [startTime, endTime] = timeRange.split("-").map(t => t.trim().replace(" ", ""));
         shifts.push({ date, startTime, endTime, desc });
       } else if (desc.toLowerCase().includes("loma")) {
         holidays.push({ date, desc });
@@ -251,13 +251,8 @@ async function generateICS() {
     link.download = "tyovuorot.ics";
     link.click();
 
-    const base64Content = btoa(icsContent);
-    document.getElementById("googleLink").href = `https://calendar.google.com/calendar/r?ics=data:text/calendar;base64,${base64Content}`;
-    document.getElementById("outlookLink").href = `https://outlook.live.com/calendar/0/action/importics?data=${encodeURIComponent(icsContent)}`;
     document.getElementById("shareButton").classList.remove("hidden");
-    document.getElementById("links").classList.remove("hidden");
-
-    statusText.textContent = "ICS-tiedosto on ladattu! Avaa tiedosto kalenterissa tai jaa se.";
+    statusText.textContent = "ICS-tiedosto on ladattu! Lisää se kalenteriin tai jaa.";
     status.classList.add("success");
     spinner.style.display = "none";
   } catch (error) {
@@ -274,11 +269,23 @@ function shareICS() {
       files: [new File([icsBlob], "tyovuorot.ics", { type: "text/calendar" })],
       title: "Työvuorot",
       text: "Jaa työvuorosi ICS-tiedostona."
-    }).catch(error => console.error("Sharing failed:", error));
+    }).catch(error => {
+      console.error("Sharing failed:", error);
+      fallbackShare();
+    });
   } else {
-    const url = URL.createObjectURL(icsBlob);
-    navigator.clipboard.writeText(url).then(() => alert("ICS-tiedoston linkki kopioitu leikepöydälle!"));
+    fallbackShare();
   }
+}
+
+function fallbackShare() {
+  const url = URL.createObjectURL(icsBlob);
+  navigator.clipboard.writeText(url).then(() => {
+    alert("ICS-tiedoston linkki kopioitu leikepöydälle! Voit liittää sen viestiin.");
+  }).catch(error => {
+    console.error("Clipboard write failed:", error);
+    alert("Jako epäonnistui. Lataa tiedosto ja jaa se manuaalisesti.");
+  });
 }
 
 document.getElementById("dropZone").addEventListener("dragover", handleDragOver);

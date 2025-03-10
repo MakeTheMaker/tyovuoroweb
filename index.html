@@ -10,8 +10,8 @@
 <body>
   <div class="container" id="dropZone">
     <h1>Työvuoro ICS Generaattori</h1>
-    <p class="subtitle">Luo kalenteritiedosto työvuoroistasi</p>
-    <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)">
+    <p class="subtitle">Luo kalenteritiedosto työvuoroistasi (valitse tiedosto tai pudota se tähän)</p>
+    <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)" style="display: none;">
     <div class="customization">
       <label>Muistutus: 
         <select id="reminder">
@@ -19,10 +19,9 @@
           <option value="15">15 minuuttia</option>
           <option value="30">30 minuuttia</option>
           <option value="60">1 tunti</option>
+          <option value="90">1,5 tuntia</option>
+          <option value="120">2 tuntia</option>
         </select>
-      </label>
-      <label>Kesto (päivävuoroille): 
-        <input type="number" id="duration" min="1" max="24" value="8"> tuntia
       </label>
     </div>
     <div id="preview" class="hidden">
@@ -39,15 +38,14 @@
       </table>
     </div>
     <div class="button-group">
-      <button id="generateButton" onclick="generateICS()" disabled>Valitse tiedosto</button>
+      <button id="generateButton" onclick="document.getElementById('pdfInput').click()">Luo ICS</button>
       <button id="googleButton" onclick="window.open('https://calendar.google.com/calendar/u/0/r/settings/export', '_blank')">
         Lisää Google Kalenteriin
       </button>
+      <button id="outlookButton" onclick="window.open('https://outlook.live.com/calendar/0/action/importics', '_blank')">
+        Lisää Outlookiin
+      </button>
       <button id="shareButton" class="hidden" onclick="shareICS()">Jaa</button>
-    </div>
-    <div id="links" class="hidden">
-      <a id="googleLink" href="#" target="_blank">Avaa Google Kalenterissa</a> |
-      <a id="outlookLink" href="#" target="_blank">Avaa Outlookissa</a>
     </div>
     <div id="status">
       <div class="spinner" id="spinner" style="display: none;"></div>
