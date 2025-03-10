@@ -122,7 +122,7 @@ async function processFile() {
 
     holidays.forEach(holiday => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${holiday.date.slice(6,8)}.${holiday.date.slice(4,6)}.${shift.date.slice(0,4)}</td>
+      row.innerHTML = `<td>${holiday.date.slice(6,8)}.${holiday.date.slice(4,6)}.${holiday.date.slice(0,4)}</td>
                        <td>Koko päivä</td>
                        <td>${holiday.desc}</td>`;
       previewTable.appendChild(row);
