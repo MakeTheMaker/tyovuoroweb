@@ -122,7 +122,7 @@ async function processFile() {
 
     holidays.forEach(holiday => {
       const row = document.createElement("tr");
-      row.innerHTML = `<td>${holiday.date.slice(6,8)}.${holiday.date.slice(4,6)}.${holiday.date.slice(0,4)}</td>
+      row.innerHTML = `<td>${holiday.date.slice(6,8)}.${holiday.date.slice(4,6)}.${shift.date.slice(0,4)}</td>
                        <td>Koko päivä</td>
                        <td>${holiday.desc}</td>`;
       previewTable.appendChild(row);
@@ -258,6 +258,7 @@ async function generateICS() {
     statusText.textContent = "ICS-tiedosto on ladattu! Lisää se kalenteriin tai jaa.";
     status.classList.add("success");
     spinner.style.display = "none";
+    preview.classList.remove("hidden"); // Ensure preview stays visible after download
   } catch (error) {
     statusText.textContent = `Virhe tapahtui: ${error.message}`;
     status.classList.add("error");
