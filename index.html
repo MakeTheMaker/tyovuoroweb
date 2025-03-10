@@ -6,12 +6,14 @@
   <title>Työvuoro ICS Generaattori</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
   <div class="container" id="dropZone">
     <p class="copyright top-copyright">2025 Marko.T©</p>
     <h1>Työvuoro ICS Generaattori</h1>
-    <p class="subtitle">Luo kalenteritiedosto työvuoroistasi (valitse työvuoro pdf-tiedosto tai pudota se tähän)</p>
+    <p class="subtitle">Luo kalenteritiedosto työvuoroistasi (valitse tiedosto tai pudota se tähän)</p>
     <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)">
     <div class="customization">
       <label>Muistutus: 
@@ -35,7 +37,12 @@
       <button id="outlookButton" onclick="window.open('https://outlook.live.com/calendar/0/addcalendar', '_blank')">
         Lisää Outlookiin
       </button>
-      <button id="shareButton" class="hidden" onclick="shareICS()">Jaa</button>
+      <button id="telegramButton" class="hidden" onclick="shareViaTelegram()">
+        <i class="fab fa-telegram-plane"></i> Telegram
+      </button>
+      <button id="whatsappButton" class="hidden" onclick="shareViaWhatsApp()">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+      </button>
     </div>
     <div id="status">
       <div class="spinner" id="spinner" style="display: none;"></div>

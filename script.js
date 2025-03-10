@@ -1,12 +1,18 @@
 let selectedFile = null;
-let icsBlob = null;
+let icsFile = null;
 
 function updateButtonState() {
   const generateButton = document.getElementById("generateButton");
+  const telegramButton = document.getElementById("telegramButton");
+  const whatsappButton = document.getElementById("whatsappButton");
   if (selectedFile) {
     generateButton.classList.remove("hidden");
+    telegramButton.classList.remove("hidden");
+    whatsappButton.classList.remove("hidden");
   } else {
     generateButton.classList.add("hidden");
+    telegramButton.classList.add("hidden");
+    whatsappButton.classList.add("hidden");
   }
 }
 
@@ -247,18 +253,21 @@ async function generateICS() {
 
     icsContent += "END:VCALENDAR\r\n";
 
-    icsBlob = new Blob([icsContent], { type: "text/calendar" });
-    const url = URL.createObjectURL(icsBlob);
+    // Create ICS File object instead of Blob
+    icsFile = new File([icsContent], "tyovuorot.ics", { type: "text/calendar" });
+
+    // Trigger download
+    const url = URL.createObjectURL(icsFile);
     const link = document.createElement("a");
     link.href = url;
     link.download = "tyovuorot.ics";
     link.click();
+    URL.revokeObjectURL(url); // Clean up
 
-    document.getElementById("shareButton").classList.remove("hidden");
     statusText.textContent = "ICS-tiedosto on ladattu! Lisää se kalenteriin tai jaa.";
     status.classList.add("success");
     spinner.style.display = "none";
-    preview.classList.remove("hidden"); // Ensure preview stays visible after download
+    preview.classList.remove("hidden");
   } catch (error) {
     statusText.textContent = `Virhe tapahtui: ${error.message}`;
     status.classList.add("error");
@@ -267,29 +276,48 @@ async function generateICS() {
   }
 }
 
-function shareICS() {
-  if (navigator.share && icsBlob) {
-    navigator.share({
-      files: [new File([icsBlob], "tyovuorot.ics", { type: "text/calendar" })],
-      title: "Työvuorot",
-      text: "Jaa työvuorosi ICS-tiedostona."
-    }).catch(error => {
-      console.error("Sharing failed:", error);
-      fallbackShare();
-    });
+function shareViaTelegram() {
+  if (icsFile) {
+    if (navigator.share) {
+      navigator.share({
+        files: [icsFile],
+        title: "Työvuorot",
+        text: "Tässä työvuoroni ICS-tiedostona!"
+      }).catch(error => {
+        console.error("Telegram sharing failed:", error);
+        alert("Telegram-jako epäonnistui. Lataa tiedosto ja jaa se manuaalisesti.");
+      });
+    } else {
+      const url = URL.createObjectURL(icsFile);
+      const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent("Tässä työvuoroni ICS-tiedostona!")}`;
+      window.open(telegramUrl, "_blank");
+      URL.revokeObjectURL(url); // Clean up
+    }
   } else {
-    fallbackShare();
+    alert("Luo ICS-tiedosto ensin!");
   }
 }
 
-function fallbackShare() {
-  const url = URL.createObjectURL(icsBlob);
-  navigator.clipboard.writeText(url).then(() => {
-    alert("ICS-tiedoston linkki kopioitu leikepöydälle! Voit liittää sen viestiin.");
-  }).catch(error => {
-    console.error("Clipboard write failed:", error);
-    alert("Jako epäonnistui. Lataa tiedosto ja jaa se manuaalisesti.");
-  });
+function shareViaWhatsApp() {
+  if (icsFile) {
+    if (navigator.share) {
+      navigator.share({
+        files: [icsFile],
+        title: "Työvuorot",
+        text: "Tässä työvuoroni ICS-tiedostona!"
+      }).catch(error => {
+        console.error("WhatsApp sharing failed:", error);
+        alert("WhatsApp-jako epäonnistui. Lataa tiedosto ja jaa se manuaalisesti.");
+      });
+    } else {
+      const url = URL.createObjectURL(icsFile);
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent("Tässä työvuoroni ICS-tiedostona: " + url)}`;
+      window.open(whatsappUrl, "_blank");
+      URL.revokeObjectURL(url); // Clean up
+    }
+  } else {
+    alert("Luo ICS-tiedosto ensin!");
+  }
 }
 
 document.getElementById("dropZone").addEventListener("dragover", handleDragOver);

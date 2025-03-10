@@ -155,6 +155,9 @@
     font-size: 16px;
     font-weight: 500;
     transition: background-color 0.3s, transform 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Space between icon and text */
   }
   
   button:hover:not(:disabled) {
@@ -183,12 +186,20 @@
     background-color: #0088cc;
   }
   
-  #shareButton {
-    background-color: #55ff55;
+  #telegramButton {
+    background-color: #0088cc;
   }
   
-  #shareButton:hover:not(:disabled) {
-    background-color: #33dd33;
+  #telegramButton:hover:not(:disabled) {
+    background-color: #006699;
+  }
+  
+  #whatsappButton {
+    background-color: #25d366;
+  }
+  
+  #whatsappButton:hover:not(:disabled) {
+    background-color: #1ebe57;
   }
   
   #status {
