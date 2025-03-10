@@ -49,6 +49,32 @@
     margin-bottom: 20px;
   }
   
+  input[type="file"] {
+    margin: 20px 0;
+    font-size: 16px;
+    color: #e0e0e0;
+    background: #3b3b5b;
+    padding: 10px;
+    border: 1px solid #4a4a77;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button {
+    background: #4a4a77;
+    color: #e0e0e0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  input[type="file"]::-webkit-file-upload-button:hover {
+    background: #5a5a99;
+  }
+  
   .customization {
     margin: 20px 0;
     display: flex;

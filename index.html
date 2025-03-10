@@ -11,7 +11,7 @@
   <div class="container" id="dropZone">
     <h1>Työvuoro ICS Generaattori</h1>
     <p class="subtitle">Luo kalenteritiedosto työvuoroistasi (valitse tiedosto tai pudota se tähän)</p>
-    <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)" style="display: none;">
+    <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)">
     <div class="customization">
       <label>Muistutus: 
         <select id="reminder">
@@ -38,11 +38,11 @@
       </table>
     </div>
     <div class="button-group">
-      <button id="generateButton" onclick="document.getElementById('pdfInput').click()">Luo ICS</button>
       <button id="googleButton" onclick="window.open('https://calendar.google.com/calendar/u/0/r/settings/export', '_blank')">
         Lisää Google Kalenteriin
       </button>
-      <button id="outlookButton" onclick="window.open('https://outlook.live.com/calendar/0/addcalendar', '_blank')">
+      <button id="generateButton" onclick="generateICS()" class="hidden">Lataa kalenterimerkintä</button>
+      <button id="outlookButton" onclick="window.open('https://outlook.live.com/calendar/0/action/importics', '_blank')">
         Lisää Outlookiin
       </button>
       <button id="shareButton" class="hidden" onclick="shareICS()">Jaa</button>

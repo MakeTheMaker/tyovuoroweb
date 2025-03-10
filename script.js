@@ -3,8 +3,11 @@ let icsBlob = null;
 
 function updateButtonState() {
   const generateButton = document.getElementById("generateButton");
-  generateButton.disabled = !selectedFile;
-  generateButton.textContent = selectedFile ? "Luo ICS" : "Luo ICS (valitse ensin)";
+  if (selectedFile) {
+    generateButton.classList.remove("hidden");
+  } else {
+    generateButton.classList.add("hidden");
+  }
 }
 
 function handleFileSelect(event) {
@@ -126,7 +129,7 @@ async function processFile() {
     });
 
     preview.classList.remove("hidden");
-    statusText.textContent = "Tiedosto käsitelty. Tarkista esikatselu ja luo ICS.";
+    statusText.textContent = "Tiedosto käsitelty. Tarkista esikatselu ja lataa kalenterimerkintä.";
     spinner.style.display = "none";
 
   } catch (error) {
@@ -291,3 +294,4 @@ function fallbackShare() {
 document.getElementById("dropZone").addEventListener("dragover", handleDragOver);
 document.getElementById("dropZone").addEventListener("dragleave", handleDragLeave);
 document.getElementById("dropZone").addEventListener("drop", handleDrop);
+updateButtonState(); // Initialize button state
