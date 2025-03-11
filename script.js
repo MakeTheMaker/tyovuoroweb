@@ -107,6 +107,7 @@ async function processFile() {
     const spinner = document.getElementById("spinner");
     const preview = document.getElementById("preview");
     const previewTable = document.getElementById("previewTable");
+    const defaultReminder = document.getElementById("reminder").value;
 
     status.classList.remove("success", "error");
     statusText.textContent = "Käsitellään tiedostoa...";
@@ -166,9 +167,9 @@ async function processFile() {
 
             if (timeRange) {
                 const [startTime, endTime] = timeRange.split("-").map(t => t.trim().replace(" ", ""));
-                shifts.push({ date, startTime, endTime, desc, alarm: "" });
+                shifts.push({ date, startTime, endTime, desc, alarm: defaultReminder });
             } else if (desc.toLowerCase().includes("loma")) {
-                holidays.push({ date, desc, alarm: "" });
+                holidays.push({ date, desc, alarm: defaultReminder });
             }
         }
 
