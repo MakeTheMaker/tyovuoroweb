@@ -21,8 +21,8 @@
             <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)" aria-label="Valitse PDF-tiedosto">
         </label>
         <div class="customization">
-            <label for="reminder">Oletusmuistutus (minuuttia ennen): 
-                <input type="number" id="reminder" min="0" step="1" placeholder="Ei muistutusta" value="" aria-label="Aseta oletusmuistutus minuuteissa">
+            <label for="reminder">Muistutus (minuuttia ennen): 
+                <input type="number" id="reminder" min="0" step="1" placeholder="Ei muistutusta" value="" aria-label="Aseta muistutus minuuteissa">
             </label>
         </div>
         <div class="button-group">
@@ -45,18 +45,12 @@
         </div>
         <div id="preview" class="hidden">
             <h2>Esikatselu</h2>
-            <div class="preview-buttons">
-                <button id="editButton">Muokkaa</button>
-                <button id="saveChangesButton" class="hidden">Tallenna muutokset</button>
-            </div>
             <table role="grid">
                 <thead>
                     <tr>
                         <th scope="col">Päivämäärä</th>
                         <th scope="col">Aika</th>
                         <th scope="col">Kuvaus</th>
-                        <th scope="col">Muistutus (min)</th>
-                        <th scope="col">Poista</th>
                     </tr>
                 </thead>
                 <tbody id="previewTable"></tbody>
@@ -65,5 +59,7 @@
         <p class="copyright">© 2025 Marko.T</p>
     </div>
     <script src="script.js"></script>
+    <!-- Cloudflare security script (unchanged) -->
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e58ffedb6a4780',t:'MTc0MTYzODU0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
