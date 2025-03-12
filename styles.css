@@ -15,7 +15,7 @@ body {
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
-    line-height: 1.6; /* Improved readability */
+    line-height: 1.6;
 }
 
 .container {
@@ -107,14 +107,13 @@ h1 {
     color: #e0e0e0;
     border: 1px solid #4a4a77;
     border-radius: 6px;
-    padding: 8px 12px; /* Increased padding for better visibility */
-    width: 150px; /* Increased width to ensure full text visibility */
-    min-width: 120px; /* Minimum width for mobile devices */
+    padding: 8px 12px;
+    width: 150px;
+    min-width: 120px;
     font-size: 14px;
     transition: border-color 0.3s;
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-    word-break: normal; /* Prevent text breaking */
-    text-align: center; /* Center-align text for better appearance */
+    box-sizing: border-box;
+    text-align: center;
 }
 
 .customization input[type="number"]:focus {
@@ -126,9 +125,9 @@ h1 {
 /* Responsive adjustments for mobile */
 @media (max-width: 500px) {
     .customization input[type="number"] {
-        width: 100%; /* Full width on small screens */
-        min-width: 140px; /* Ensure enough space for "Ei muistutusta" */
-        padding: 10px 12px; /* Extra padding for mobile */
+        width: 100%;
+        min-width: 140px;
+        padding: 10px 12px;
     }
 }
 
@@ -142,17 +141,26 @@ h1 {
     margin-bottom: 10px;
 }
 
+.edit-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
     color: #e0e0e0;
     background: #2d2d44;
+    table-layout: fixed;
 }
 
 th, td {
     padding: 12px;
     border: 1px solid #4a4a77;
     text-align: left;
+    position: relative;
 }
 
 th {
@@ -162,12 +170,38 @@ th {
 
 td {
     background: #2d2d44;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 25%; }
+th:nth-child(2), td:nth-child(2) { width: 35%; }
+th:nth-child(3), td:nth-child(3) { width: 40%; max-width: 200px; }
+
+/* Mobile Table Adjustments */
+@media (max-width: 500px) {
+    table {
+        font-size: 12px;
+    }
+
+    th, td {
+        padding: 6px;
+    }
+
+    .reminder-field {
+        font-size: 10px;
+    }
+
+    th:nth-child(3), td:nth-child(3) {
+        max-width: 150px;
+    }
 }
 
 .button-group, .calendar-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 10px;
     justify-content: center;
     margin-top: 20px;
 }
@@ -175,17 +209,18 @@ td {
 button {
     background-color: #5a5aff;
     color: #ffffff;
-    padding: 12px 24px;
+    padding: 8px 16px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 500;
     transition: background-color 0.3s, transform 0.2s;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     text-decoration: none;
+    min-width: 120px;
 }
 
 button:hover:not(:disabled) {
@@ -214,23 +249,112 @@ button:disabled {
     background-color: #0088cc;
 }
 
+/* Edit Button */
+#editButton {
+    background-color: #ffaa00;
+}
+
+#editButton:hover:not(:disabled) {
+    background-color: #e69900;
+}
+
+/* Save Changes Button */
+#saveChangesButton {
+    background-color: #55ff55;
+    color: #1e1e2f;
+}
+
+#saveChangesButton:hover:not(:disabled) {
+    background-color: #44dd44;
+}
+
+/* Editable Inputs (Date, Time, Reminder) */
+input[type="date"].editable, input[type="time"].editable, input[type="number"].editable {
+    background: #3b3b5b;
+    border: 1px solid #5a5aff;
+    border-radius: 4px;
+    padding: 6px;
+    color: #e0e0e0;
+    font-size: 12px;
+    width: 100%;
+    height: auto; /* Default single-line height */
+    box-sizing: border-box;
+    word-wrap: break-word;
+    resize: none;
+}
+
+input[type="date"].editable:focus, input[type="time"].editable:focus, input[type="number"].editable:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(90, 90, 255, 0.5);
+}
+
+/* Textarea for Kuvaus in Edit Mode */
+textarea.editable {
+    background: #3b3b5b;
+    border: 1px solid #5a5aff;
+    border-radius: 4px;
+    padding: 6px;
+    color: #e0e0e0;
+    font-size: 12px;
+    width: 100%;
+    height: 40px; /* Allow space for two rows */
+    box-sizing: border-box;
+    resize: none; /* Prevent manual resizing */
+    overflow: auto; /* Allow scrolling if needed */
+    white-space: normal; /* Allow text to wrap */
+}
+
+textarea.editable:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(90, 90, 255, 0.5);
+}
+
+/* Remove Button (Reworked to Simple Red "X") */
+.remove-btn {
+    position: absolute;
+    top: 7%;
+    left: 3%; /* Move to the right side of the cell */
+    transform: translateY(-50%); /* Center vertically */
+    color: #ff5555;
+    font-size: 18px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 2px;
+    z-index: 1; /* Ensure it appears above other content */
+}
+
+.remove-btn:hover {
+    color: #ff3333; /* Slightly darker red on hover */
+}
+
+.remove-btn i {
+    margin: 0;
+}
+
+/* Reminder Field */
+.reminder-field {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
 .info-text {
     color: #b0b0cc;
     font-size: 14px;
     margin-top: 10px;
-    line-height: 1.5; /* Improved readability */
+    line-height: 1.5;
 }
 
 /* Responsive adjustments for info-text */
 @media (max-width: 500px) {
     .info-text {
         font-size: 12px;
-        padding: 0 10px; /* Prevent text overflow on small screens */
+        padding: 0 10px;
     }
 }
 
 #status {
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 14px;
     color: #b0b0cc;
     min-height: 20px;
