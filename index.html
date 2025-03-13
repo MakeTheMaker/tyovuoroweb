@@ -7,6 +7,10 @@
     <title>Työvuoro ICS Generaattori</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script>
+        // Set pdf.js worker source to avoid deprecated API warning
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    </script>
     <!-- Font Awesome CDN for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
@@ -15,7 +19,6 @@
         <p class="copyright top-copyright">© 2025 Marko.T</p>
         <h1>Työvuoro ICS Generaattori</h1>
         <p class="subtitle">Luo kalenteritiedosto työvuoroistasi (valitse tiedosto tai pudota se tähän)</p>
-        <!-- Custom file input with PDF icon -->
         <label for="pdfInput" class="file-input-label">
             <i class="fa-regular fa-file-pdf"></i> Valitse PDF-tiedosto
             <input type="file" id="pdfInput" accept=".pdf" onchange="handleFileSelect(event)" aria-label="Valitse PDF-tiedosto">
@@ -64,11 +67,69 @@
                 <tbody id="previewTable"></tbody>
             </table>
         </div>
-        <p class="copyright">© 2025 Marko.T</p>
+        <p class="copyright">© 2025 Marko.T <span id="icsCounter" style="color: #5a5aff;">ics: 0</span> <span id="visitorCounter" style="color: #ffaa00;">kävijät: 0</span></p>
     </div>
+
+    <!-- Firebase SDKs (Modular, Analytics Removed) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAfVnaheDdzK8AG04cSAaAw40u88XfnmR0",
+            authDomain: "tyovuoroics.firebaseapp.com",
+            projectId: "tyovuoroics",
+            storageBucket: "tyovuoroics.firebasestorage.app",
+            messagingSenderId: "75013158973",
+            appId: "1:75013158973:web:4a59ba6a15506b6b145254",
+            measurementId: "G-105H7KBQRV"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firestore = { db, doc, getDoc, setDoc, updateDoc, increment };
+
+        async function updateCounters() {
+            const icsRef = doc(db, "counters", "icsCount");
+            const visitorRef = doc(db, "counters", "visitors");
+
+            // ICS Counter
+            const icsSnap = await getDoc(icsRef);
+            if (icsSnap.exists()) {
+                document.getElementById("icsCounter").textContent = `ics: ${icsSnap.data().count}`;
+            } else {
+                await setDoc(icsRef, { count: 0 });
+                document.getElementById("icsCounter").textContent = "ics: 0";
+            }
+
+            // Visitor Counter
+            const visitorSnap = await getDoc(visitorRef);
+            if (visitorSnap.exists()) {
+                document.getElementById("visitorCounter").textContent = `kävijät: ${visitorSnap.data().count}`;
+            } else {
+                await setDoc(visitorRef, { count: 0 });
+                document.getElementById("visitorCounter").textContent = "kävijät: 0";
+            }
+
+            // Increment visitor count if not already counted in this session
+            if (!sessionStorage.getItem("visitorCounted")) {
+                await updateDoc(visitorRef, { count: increment(1) }).catch(async () => {
+                    await setDoc(visitorRef, { count: 1 }); // If doc doesn't exist
+                });
+                sessionStorage.setItem("visitorCounted", "true");
+                const updatedSnap = await getDoc(visitorRef);
+                document.getElementById("visitorCounter").textContent = `kävijät: ${updatedSnap.data().count}`;
+            }
+        }
+
+        updateCounters();
+    </script>
+
     <script src="script.js"></script>
-    <!-- Cloudflare security script (unchanged) -->
+    <!-- Cloudflare security scripts (unchanged) -->
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e58ffedb6a4780',t:'MTc0MTYzODU0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eea64bc9c8d6ad',t:'MTc0MTczMzgzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fefbf81e5b6764',t:'MTc0MTkwNTExNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>

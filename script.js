@@ -199,12 +199,12 @@ function saveChanges() {
 
         if (type === "shift") {
             if (field === "date") {
-                value = value.replace(/-/g, ""); // Convert "yyyy-mm-dd" to "yyyymmdd"
+                value = value.replace(/-/g, "");
             }
             shifts[index][field] = value;
         } else if (type === "holiday") {
             if (field === "date") {
-                value = value.replace(/-/g, ""); // Convert "yyyy-mm-dd" to "yyyymmdd"
+                value = value.replace(/-/g, "");
             }
             holidays[index][field] = value;
         }
@@ -214,7 +214,7 @@ function saveChanges() {
 }
 
 function removeRow(event, index, type) {
-    event.stopPropagation(); // Prevent the click event from bubbling up to the row
+    event.stopPropagation();
     if (type === "shift") {
         shifts.splice(index, 1);
     } else if (type === "holiday") {
@@ -291,6 +291,18 @@ async function generateICS() {
         link.download = "tyovuorot.ics";
         link.click();
         URL.revokeObjectURL(url);
+
+        // Increment the ICS counter in Firestore
+        const { db, doc, getDoc, setDoc, updateDoc, increment } = window.firestore;
+        const icsRef = doc(db, "counters", "icsCount");
+        const icsSnap = await getDoc(icsRef);
+        if (icsSnap.exists()) {
+            await updateDoc(icsRef, { count: increment(1) });
+        } else {
+            await setDoc(icsRef, { count: 1 });
+        }
+        const updatedIcsSnap = await getDoc(icsRef);
+        document.getElementById("icsCounter").textContent = `ics: ${updatedIcsSnap.data().count}`;
 
         statusText.textContent = "ICS-tiedosto on ladattu! Lisää se kalenteriin.";
         status.classList.add("success");
