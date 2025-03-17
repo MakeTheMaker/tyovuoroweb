@@ -3,6 +3,7 @@ let shifts = [];
 let holidays = [];
 let isEditMode = false;
 
+// Toggle visibility of generate and edit buttons based on file selection
 function updateButtonState() {
     const generateButton = document.getElementById("generateButton");
     const editButton = document.getElementById("editButton");
@@ -15,12 +16,14 @@ function updateButtonState() {
     }
 }
 
+// Handle file input selection
 function handleFileSelect(event) {
     selectedFile = event.target.files[0];
     updateButtonState();
     processFile();
 }
 
+// Handle file drop event
 function handleDrop(event) {
     event.preventDefault();
     document.getElementById("dropZone").classList.remove("dragover");
@@ -29,16 +32,19 @@ function handleDrop(event) {
     processFile();
 }
 
+// Add drag-over styling
 function handleDragOver(event) {
     event.preventDefault();
     document.getElementById("dropZone").classList.add("dragover");
 }
 
+// Remove drag-over styling
 function handleDragLeave(event) {
     event.preventDefault();
     document.getElementById("dropZone").classList.remove("dragover");
 }
 
+// Process uploaded PDF and extract shifts/holidays
 async function processFile() {
     const status = document.getElementById("status");
     const statusText = document.getElementById("statusText");
@@ -47,6 +53,7 @@ async function processFile() {
     const previewTable = document.getElementById("previewTable");
     const defaultReminder = document.getElementById("reminder").value;
 
+    // Reset UI state
     status.classList.remove("success", "error");
     statusText.textContent = "Käsitellään tiedostoa...";
     spinner.style.display = "inline-block";
@@ -70,6 +77,7 @@ async function processFile() {
             text += textContent.items.map(item => item.str).join(" ") + "\n";
         }
 
+        // Determine date range for year assignment
         let startYear, endYear;
         const dateRangeMatch = text.match(/(\d{1,2}\.\d{1,2}\.\d{4})\s*[-–—]\s*(\d{1,2}\.\d{1,2}\.\d{4})/);
         if (dateRangeMatch) {
@@ -118,6 +126,18 @@ async function processFile() {
             return;
         }
 
+        // Increment ICS counter on successful PDF upload
+        const { db, doc, getDoc, setDoc, updateDoc, increment } = window.firestore;
+        const icsRef = doc(db, "counters", "icsCount");
+        const icsSnap = await getDoc(icsRef);
+        if (icsSnap.exists()) {
+            await updateDoc(icsRef, { count: increment(1) });
+        } else {
+            await setDoc(icsRef, { count: 1 });
+        }
+        const updatedIcsSnap = await getDoc(icsRef);
+        document.getElementById("icsCounter").textContent = `ics: ${updatedIcsSnap.data().count}`;
+
         renderPreview();
         preview.classList.remove("hidden");
         statusText.textContent = "Tiedosto käsitelty. Tarkista esikatselu ja lataa kalenterimerkintä.";
@@ -132,6 +152,7 @@ async function processFile() {
     }
 }
 
+// Render shifts and holidays in the preview table
 function renderPreview() {
     const previewTable = document.getElementById("previewTable");
     previewTable.innerHTML = "";
@@ -181,6 +202,7 @@ function renderPreview() {
     });
 }
 
+// Toggle edit mode for preview table
 function toggleEditMode() {
     isEditMode = !isEditMode;
     const editButton = document.getElementById("editButton");
@@ -190,6 +212,7 @@ function toggleEditMode() {
     renderPreview();
 }
 
+// Save edited changes to shifts and holidays
 function saveChanges() {
     document.querySelectorAll("[data-index]").forEach(element => {
         const index = parseInt(element.dataset.index);
@@ -213,6 +236,7 @@ function saveChanges() {
     toggleEditMode();
 }
 
+// Remove a row from the preview table
 function removeRow(event, index, type) {
     event.stopPropagation();
     if (type === "shift") {
@@ -223,6 +247,7 @@ function removeRow(event, index, type) {
     renderPreview();
 }
 
+// Generate and download ICS file
 async function generateICS() {
     const status = document.getElementById("status");
     const statusText = document.getElementById("statusText");
@@ -292,18 +317,6 @@ async function generateICS() {
         link.click();
         URL.revokeObjectURL(url);
 
-        // Increment the ICS counter in Firestore
-        const { db, doc, getDoc, setDoc, updateDoc, increment } = window.firestore;
-        const icsRef = doc(db, "counters", "icsCount");
-        const icsSnap = await getDoc(icsRef);
-        if (icsSnap.exists()) {
-            await updateDoc(icsRef, { count: increment(1) });
-        } else {
-            await setDoc(icsRef, { count: 1 });
-        }
-        const updatedIcsSnap = await getDoc(icsRef);
-        document.getElementById("icsCounter").textContent = `ics: ${updatedIcsSnap.data().count}`;
-
         statusText.textContent = "ICS-tiedosto on ladattu! Lisää se kalenteriin.";
         status.classList.add("success");
         spinner.style.display = "none";
@@ -315,6 +328,7 @@ async function generateICS() {
     }
 }
 
+// Attach event listeners for drag-and-drop functionality
 document.getElementById("dropZone").addEventListener("dragover", handleDragOver);
 document.getElementById("dropZone").addEventListener("dragleave", handleDragLeave);
 document.getElementById("dropZone").addEventListener("drop", handleDrop);
