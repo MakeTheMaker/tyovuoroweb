@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Generoi ICS-kalenteritiedosto työvuoroistasi PDF-tiedostosta.">
-    <title>Työvuoro ICS Generaattori</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-    <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
 <body>
     <div class="container" id="dropZone">
         <p class="copyright top-copyright">© 2025 Marko.T</p>
@@ -35,6 +21,8 @@
             </button>
         </div>
         <p class="info-text">Google- ja Outlook-painikkeet avaavat linkit, mistä voit lisätä ICS-tiedostosi kalenteriin.</p>
+        <!-- Add the new site link here -->
+        <p class="info-text"><a href="https://vuoroparseri.web.app/" target="_blank" style="color: #5a5aff; text-decoration: underline;">Uusi sivusto</a></p>
         <div id="status">
             <div class="spinner" id="spinner" style="display: none;"></div>
             <span id="statusText" role="alert"></span>
@@ -68,7 +56,8 @@
         <p class="copyright">© 2025 Marko.T <span id="icsCounter" style="color: #5a5aff;">ics: 0</span> <span id="visitorCounter" style="color: #ffaa00;">kävijät: 0</span></p>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Comment out Firebase and local script -->
+    <!--
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
@@ -88,12 +77,10 @@
 
         window.firestore = { db, doc, getDoc, setDoc, updateDoc, increment };
 
-        // Initialize and update visitor and ICS counters
         async function updateCounters() {
             const icsRef = doc(db, "counters", "icsCount");
             const visitorRef = doc(db, "counters", "visitors");
 
-            // Update ICS counter display
             const icsSnap = await getDoc(icsRef);
             if (icsSnap.exists()) {
                 document.getElementById("icsCounter").textContent = `ics: ${icsSnap.data().count}`;
@@ -102,7 +89,6 @@
                 document.getElementById("icsCounter").textContent = "ics: 0";
             }
 
-            // Update visitor counter display
             const visitorSnap = await getDoc(visitorRef);
             if (visitorSnap.exists()) {
                 document.getElementById("visitorCounter").textContent = `kävijät: ${visitorSnap.data().count}`;
@@ -111,7 +97,6 @@
                 document.getElementById("visitorCounter").textContent = "kävijät: 0";
             }
 
-            // Increment visitor count for new sessions
             if (!sessionStorage.getItem("visitorCounted")) {
                 await updateDoc(visitorRef, { count: increment(1) }).catch(async () => {
                     await setDoc(visitorRef, { count: 1 });
@@ -124,12 +109,17 @@
 
         updateCounters();
     </script>
+    -->
 
-    <script src="script.js"></script>
-    <!-- Cloudflare security scripts -->
+    <!-- Comment out local script.js -->
+    <!-- <script src="script.js"></script> -->
+
+    <!-- Comment out Cloudflare security scripts -->
+    <!--
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91e58ffedb6a4780',t:'MTc0MTYzODU0OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91eea64bc9c8d6ad',t:'MTc0MTczMzgzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91fefbf81e5b6764',t:'MTc0MTkwNTExNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'921f9f32cc8a59bb',t:'MTc0MjI0NzM0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9257daf9c905c027',t:'MTc0MjgzNjk5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    -->
 </body>
-</html>
