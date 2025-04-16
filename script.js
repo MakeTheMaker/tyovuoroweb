@@ -280,7 +280,7 @@ async function generateICS() {
             const uid = `${start}Z-${String(index + 1).padStart(3, "0")}@make`;
 
             icsContent += "BEGIN:VEVENT\r\n" +
-                          `SUMMARY:Työvuoro - ${shift.desc}\r\n` +
+                          `SUMMARY:${shift.desc}\r\n` +
                           `DTSTART:${start}\r\n` +
                           `DTEND:${end}\r\n` +
                           `UID:${uid}\r\n` +
